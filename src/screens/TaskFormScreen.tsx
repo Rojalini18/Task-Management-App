@@ -1,17 +1,26 @@
 import React, {useContext, useState} from 'react';
 import {
   View,
+  Text,
   TextInput,
   StyleSheet,
-  Text,
   TouchableOpacity,
 } from 'react-native';
 import {TaskContext} from '../context/TaskContext';
 import uuid from 'react-native-uuid'; // UUID for generating unique task IDs
 import DatePicker from 'react-native-date-picker'; // DatePicker component for selecting due dates
 import Toast from 'react-native-toast-message'; // Toast component for displaying notifications
+import {StackScreenProps} from '@react-navigation/stack'; // For navigation prop types
 
-const TaskFormScreen = ({route, navigation}) => {
+interface TaskFormScreenProps extends StackScreenProps<any, any> {
+  route: {
+    params?: {
+      taskId?: string;
+    };
+  };
+}
+
+const TaskFormScreen: React.FC<TaskFormScreenProps> = ({route, navigation}) => {
   const {addTask, updateTask, tasks} = useContext(TaskContext);
   const taskId = route.params?.taskId;
   const taskToEdit = tasks.find(task => task.id === taskId); // Find the task to edit, if taskId exists

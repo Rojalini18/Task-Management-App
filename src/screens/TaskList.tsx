@@ -12,16 +12,37 @@ import {
 } from 'react-native';
 import {TaskContext} from '../context/TaskContext';
 
-const TaskList = ({navigation}) => {
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  completed: boolean;
+  createdAt: string;
+}
+
+interface TaskListProps {
+  navigation: {
+    navigate: (screen: string, params?: {taskId: string}) => void;
+  };
+}
+
+const TaskList: React.FC<TaskListProps> = ({navigation}) => {
   // Extract tasks, deleteTask, updateTask, and loading status from TaskContext
-  const {tasks, deleteTask, updateTask, loading} = useContext(TaskContext);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentFilter, setCurrentFilter] = useState('all Tasks'); // For filtering
-  const [sortOrder, setSortOrder] = useState('newest'); // For sorting
+  const {tasks, deleteTask, updateTask, loading} = useContext(TaskContext) as {
+    tasks: Task[];
+    deleteTask: (id: string) => void;
+    updateTask: (task: Task) => void;
+    loading: boolean;
+  };
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [currentFilter, setCurrentFilter] = useState<string>('all Tasks'); // For filtering
+  const [sortOrder, setSortOrder] = useState<string>('newest'); // For sorting
 
   // Modal state
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
 
   // Filter tasks based on the search query and current filter (completed/pending)
   const filteredTasks = tasks
@@ -37,16 +58,17 @@ const TaskList = ({navigation}) => {
   // Sort tasks based on the selected sort order (newest, oldest, due date)
   const sortedTasks = filteredTasks.sort((a, b) => {
     if (sortOrder === 'newest') {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     } else if (sortOrder === 'oldest') {
-      return new Date(a.createdAt) - new Date(b.createdAt);
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     } else if (sortOrder === 'dueDate') {
-      return new Date(a.dueDate) - new Date(b.dueDate);
+      return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
     }
+    return 0;
   });
 
   // Function to open modal for deleting task
-  const handleDeleteTask = taskId => {
+  const handleDeleteTask = (taskId: string) => {
     setTaskToDelete(taskId);
     setModalVisible(true);
   };
