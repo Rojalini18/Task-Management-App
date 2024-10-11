@@ -35,6 +35,10 @@ To set up the project locally, follow these steps:
 - User can create new tasks with a title, description, and due date.
 - Users can edit existing tasks.
 - Validation for required fields (title, description, due date).
+- Data Persistence: AsyncStorage is used to persist task data, ensuring that tasks remain available even after the app is closed. Tasks are stored in AsyncStorage whenever they are added, updated, or deleted.
+- Sorting: Users can sort tasks by Due date, newest and oldest task to efficiently manage their task list.
+- Filtering: Tasks can be filtered based on their completion status (completed or pending), helping users focus on what needs to be done.
+- Search Functionality: Users can search for tasks by title or description, allowing them to quickly find specific tasks within the list.
 - Notifications for task creation and updates using toast messages.
 - Date selection using a date picker.
 - A user-friendly interface with a responsive design.
